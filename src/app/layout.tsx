@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Weather App",
     description: "Simple weather dashboard with forecasts, facts, and unit toggle.",
-    url: "https://example.com",
+    url: "https://vercel.com/uswajamils-projects/weatherapp1",
     siteName: "Weather App",
     images: [
       {
