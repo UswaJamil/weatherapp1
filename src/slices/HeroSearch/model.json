@@ -1,0 +1,44 @@
+{
+  "type": "SharedSlice",
+  "id": "hero_search",
+  "name": "HeroSearch",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default variation featuring logo, title, description, and a search input for location.",
+      "version": "initial",
+      "imageUrl": "",
+      "docURL": "...",
+      "primary": {
+        "logo": {
+          "type": "Image",
+          "config": {
+            "label": "Logo"
+          }
+        },
+        "description": {
+          "type": "StructuredText",
+          "config": {
+            "single": "paragraph",
+            "label": "Description"
+          }
+        },
+        "search_placeholder": {
+          "type": "Text",
+          "config": {
+            "label": "Search Placeholder"
+          }
+        },
+        "heading": {
+          "type": "Text",
+          "config": {
+            "label": "heading",
+            "placeholder": ""
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

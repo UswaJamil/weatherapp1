@@ -1,0 +1,25 @@
+{
+  "format": "custom",
+  "id": "right_panel",
+  "label": "right Panel",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "slices": {
+        "type": "Slices",
+        "fieldset": "Slice Zone",
+        "config": {
+          "choices": {
+            "weather_forecast": {
+              "type": "SharedSlice"
+            },
+            "weather_facts": {
+              "type": "SharedSlice"
+            }
+          }
+        }
+      }
+    }
+  }
+}
