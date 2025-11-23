@@ -51,7 +51,7 @@ export default async function DetailPage({
 
   return (
     <div className="flex gap-6 max-[1024px]:flex-col min-h-screen bg-black p-4">
-      <LeftPanel weather={weather} slices={slices} />
+      <LeftPanel weather={weather} forecast={forecast} slices={slices} />
      <RightPanel weather={weather} forecast={forecast} slices={slices} />
 
     </div>
