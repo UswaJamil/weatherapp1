@@ -1,0 +1,45 @@
+{
+  "type": "SharedSlice",
+  "id": "weather_facts",
+  "name": "WeatherFacts",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "description": "Default variation for displaying multiple weather facts in a vertical list.",
+      "version": "initial",
+      "imageUrl": "",
+      "docURL": "...",
+      "primary": {
+        "title": {
+          "type": "StructuredText",
+          "config": {
+            "single": "heading2",
+            "label": "Section Title"
+          }
+        },
+        "facts": {
+          "type": "Group",
+          "config": {
+            "label": "Facts",
+            "fields": {
+              "icon": {
+                "type": "Image",
+                "config": {
+                  "label": "Icon"
+                }
+              },
+              "label": {
+                "type": "Text",
+                "config": {
+                  "label": "Fact Label"
+                }
+              }
+            }
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

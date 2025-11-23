@@ -1,0 +1,33 @@
+{
+  "type": "SharedSlice",
+  "id": "weather_overview",
+  "name": "WeatherOverview",
+  "variations": [
+    {
+      "id": "main_weather_card",
+      "name": "Main Weather Card",
+      "description": "Primary weather card with city, date, time, current temperature, weather icon, min/max temperatures, and weather condition summary.",
+      "version": "initial",
+      "imageUrl": "",
+      "docURL": "...",
+      "primary": {
+        "logo": {
+          "type": "Image",
+          "config": {
+            "label": "logo",
+            "constraint": {},
+            "thumbnails": []
+          }
+        },
+        "search_placeholder": {
+          "type": "Text",
+          "config": {
+            "label": "Search Placeholder",
+            "placeholder": ""
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

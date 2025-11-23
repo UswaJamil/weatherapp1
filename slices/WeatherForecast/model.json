@@ -1,0 +1,38 @@
+{
+  "type": "SharedSlice",
+  "id": "weather_forecast",
+  "name": "WeatherForecast",
+  "variations": [
+    {
+      "id": "five_day_forecast",
+      "name": "Five Day Forecast",
+      "description": "Displays a weather forecast for five days with day labels, weather icons, conditions, and temperature range.",
+      "version": "initial",
+      "imageUrl": "",
+      "docURL": "...",
+      "primary": {
+        "section_title": {
+          "type": "Text",
+          "config": {
+            "label": "Section Title"
+          }
+        },
+        "forecast_days": {
+          "type": "Group",
+          "config": {
+            "label": "Forecast Days",
+            "fields": {
+              "day_label": {
+                "type": "Text",
+                "config": {
+                  "label": "Day Label"
+                }
+              }
+            }
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}
