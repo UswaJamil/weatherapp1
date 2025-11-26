@@ -16,8 +16,10 @@ export default function UnitToggle({ small }: UnitToggleProps) {
     <button
       onClick={() => dispatch(toggleUnit())}
       className={`${
+
         small ? "text-3xl  " : "text-5xl py-1 "
       } font-extrabold rounded-lg text-white bg-transparent hover:opacity-80`}
+
     >
       {unit === "metric" ? "°C" : "°F"}
     </button>
