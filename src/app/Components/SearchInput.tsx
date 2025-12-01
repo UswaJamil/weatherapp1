@@ -170,12 +170,3 @@ useEffect(() => {
 
 
 
-// Jab ap ne search kar rahe ho input pick kar leya country name 
-// next navigate to detail page 
-// from paramter get the location and according to call the weather api 
-// and this weather api inside the detail page then it will be run in the useEffect
-// What the data will come from the api and response and make it dynamic 
-// so it will be like dynamic data instead of the static don't change the layout and designing everything 
-// should work smooth
-
-// prismic search ... 
