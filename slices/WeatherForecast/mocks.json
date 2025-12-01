@@ -1,32 +1,32 @@
 [
-	{
-		"__TYPE__": "SharedSliceContent",
-		"variation": "five_day_forecast",
-		"primary": {
-			"section_title": {
-				"__TYPE__": "FieldContent",
-				"value": "anybody",
-				"type": "Text"
-			},
-			"forecast_days": {
-				"__TYPE__": "GroupContentType",
-				"value": [
-					{
-						"__TYPE__": "GroupItemContent",
-						"value": [
-							[
-								"day_label",
-								{
-									"__TYPE__": "FieldContent",
-									"value": "suppose",
-									"type": "Text"
-								}
-							]
-						]
-					}
-				]
-			}
-		},
-		"items": []
-	}
+  {
+    "__TYPE__": "SharedSliceContent",
+    "variation": "five_day_forecast",
+    "primary": {
+      "section_title": {
+        "__TYPE__": "FieldContent",
+        "value": "anybody",
+        "type": "Text"
+      },
+      "forecast_days": {
+        "__TYPE__": "GroupContentType",
+        "value": [
+          {
+            "__TYPE__": "GroupItemContent",
+            "value": [
+              [
+                "day_label",
+                {
+                  "__TYPE__": "FieldContent",
+                  "value": "suppose",
+                  "type": "Text"
+                }
+              ]
+            ]
+          }
+        ]
+      }
+    },
+    "items": []
+  }
 ]

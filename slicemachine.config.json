@@ -3,6 +3,6 @@
   "repositoryName": "weather-ap",
   "adapter": "@slicemachine/adapter-next",
 
-"libraries": ["./slices"],
+  "libraries": ["./slices"],
   "localSliceSimulatorURL": "http://localhost:3000/slice-simulator"
 }

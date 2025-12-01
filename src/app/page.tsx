@@ -1,11 +1,11 @@
-import Hero from "./Components/home/Hero";
-import * as prismic from "@prismicio/client";
+import Hero from '@/Components/home/Hero';
+import * as prismic from '@prismicio/client';
 
 // Prismic client
-const client = prismic.createClient("weather-ap");
+const client = prismic.createClient('weather-ap');
 
 export default async function Home() {
-  const page = await client.getSingle("home");
+  const page = await client.getSingle('home');
 
   return (
     <div>
@@ -13,6 +13,3 @@ export default async function Home() {
     </div>
   );
 }
-
-
- 

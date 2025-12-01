@@ -1,19 +1,19 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 interface UnitState {
-  unit: "metric" | "imperial";
+  unit: 'metric' | 'imperial';
 }
 
 const initialState: UnitState = {
-  unit: "metric",
+  unit: 'metric',
 };
 
 const unitSlice = createSlice({
-  name: "unit",
+  name: 'unit',
   initialState,
   reducers: {
     toggleUnit(state) {
-      state.unit = state.unit === "metric" ? "imperial" : "metric";
+      state.unit = state.unit === 'metric' ? 'imperial' : 'metric';
     },
   },
 });

@@ -1,0 +1,100 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
+export interface SearchResult {
+  name: string;
+  state?: string;
+  country: string;
+  lat: number;
+  lon: number;
+}
+
+interface SearchState {
+  results: SearchResult[];
+  loading: boolean;
+  error: string | null;
+  query: string;
+}
+
+const initialState: SearchState = {
+  results: [],
+  loading: false,
+  error: null,
+  query: '',
+};
+
+export const fetchSearchResults = createAsyncThunk(
+  'search/fetchResults',
+  async (
+    { query, apiKey }: { query: string; apiKey: string },
+    { rejectWithValue }
+  ) => {
+    if (!query.trim()) {
+      return [];
+    }
+
+    try {
+      const response = await fetch(
+        `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=8&appid=${apiKey}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Search API error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+
+      // Ensure data is an array
+      if (!Array.isArray(data)) {
+        return [];
+      }
+
+      return data.map((item: any) => ({
+        name: item.name,
+        state: item.state,
+        country: item.country,
+        lat: item.lat,
+        lon: item.lon,
+      }));
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error
+          ? error.message
+          : 'Failed to fetch search results'
+      );
+    }
+  }
+);
+
+const searchSlice = createSlice({
+  name: 'search',
+  initialState,
+  reducers: {
+    setQuery: (state, action) => {
+      state.query = action.payload;
+    },
+    clearSearch: (state) => {
+      state.results = [];
+      state.query = '';
+      state.error = null;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchSearchResults.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchSearchResults.fulfilled, (state, action) => {
+        state.loading = false;
+        state.results = action.payload;
+      })
+      .addCase(fetchSearchResults.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        state.results = [];
+      });
+  },
+});
+
+export const { setQuery, clearSearch } = searchSlice.actions;
+export default searchSlice.reducer;

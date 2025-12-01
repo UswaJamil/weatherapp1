@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+@import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -23,29 +23,30 @@
    BASE STYLES
 ------------------------------------ */
 @layer base {
-  html, body, #__next {
+  html,
+  body,
+  #__next {
     height: 100%;
   }
 
   body {
-     margin: 0;
+    margin: 0;
     padding: 0;
     color: var(--text-primary);
-    font-family: "Nunito", sans-serif;
+    font-family: 'Nunito', sans-serif;
     overflow-x: hidden;
     background-color: var(--background) !important;
   }
 }
-  .bg-new {
-    background-image: url("/Bckground image.png");
-    background-size: cover;
-    background-position: top center;
-    background-repeat: no-repeat;
-    background-color: var(--background);
-   
-  }
+.bg-new {
+  background-image: url('/Bckground image.png');
+  background-size: cover;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-color: var(--background);
+}
 
-  .loader-spinner {
+.loader-spinner {
   width: 22px;
   height: 22px;
   display: inline-block;
@@ -127,28 +128,36 @@
   padding-right: 16px;
   display: flex;
   align-items: center;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.01);
-  border: 1px solid rgba(255,255,255,0.02);
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.02);
 }
 
 /* Popover */
 .search-popover {
   border-radius: 14px;
-  background: rgba(59,59,84,0.95);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  background: rgba(59, 59, 84, 0.95);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
   overflow: hidden;
 }
 
 /* popover item hover */
 .search-popover li:hover {
-  background: rgba(74,74,102,0.9);
+  background: rgba(74, 74, 102, 0.9);
 }
 
 /* Animations */
 @layer utilities {
   @keyframes fadeInMini {
-    0% { opacity: 0; transform: translateY(-6px); }
-    100% { opacity: 1; transform: translateY(0); }
+    0% {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   .animate-fadeInMini {
     animation: fadeInMini 160ms ease-out forwards;

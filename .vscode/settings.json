@@ -1,0 +1,21 @@
+{
+  "css.lint.universalSelector": "warning",
+  "css.lint.compatibleVendorPrefixes": "warning",
+  "css.lint.vendorPrefix": "warning",
+  "css.lint.duplicateProperties": "warning",
+  "css.lint.emptyRuleSet": "warning",
+  "css.lint.importStatement": "warning",
+  "css.lint.boxModel": "warning",
+  "css.lint.textShadow": "warning",
+  "css.lint.unknownAtRules": "ignore",
+  "css.lint.ieHack": "warning",
+  "css.lint.keyframeSelector": "ignore",
+  "css.lint.zeroUnits": "warning",
+  "css.lint.fontFaceProperties": "warning",
+  "css.lint.hexColorLength": "warning",
+  "css.lint.argumentsInColorFunction": "warning",
+  "css.lint.unknownVendorSpecificProperty": "ignore",
+  "css.validate": false,
+  "scss.validate": false,
+  "less.validate": false
+}

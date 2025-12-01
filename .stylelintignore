@@ -1,0 +1,5 @@
+# Ignore globals and other Tailwind generated files
+src/app/globals.css
+node_modules/
+.build/
+.next/

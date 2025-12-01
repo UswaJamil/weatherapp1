@@ -1,66 +1,64 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface SearchInputProps {
   placeholder?: string;
 }
 
 export default function SearchInput({
-  placeholder = "Search Location",
+  placeholder = 'Search Location',
 }: SearchInputProps) {
   const router = useRouter();
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<any[]>([]);
 
   // Fetch cities from OpenWeatherMap Geocoding API
-useEffect(() => {
-  if (query.trim().length === 0) {
-    setResults([]);
-    setIsLoading(false);
-    return;
-  }
-
-  const fetchCities = async () => {
-    setIsLoading(true);
-
-    try {
-      const res = await fetch(
-
-        `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=8&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}`
-      );
-
-      const data = await res.json();
-
-      // 🔥 IMPORTANT FIX → ensure data is an array
-      if (!Array.isArray(data)) {
-        setResults([]);
-        setIsLoading(false);
-        return;
-      }
-
-      const formatted = data.map((item: any) => ({
-        name: `${item.name}${item.state ? ", " + item.state : ""} - ${item.country}`,
-        lat: item.lat,
-        lon: item.lon,
-      }));
-
-      setResults(formatted);
-    } catch {
+  useEffect(() => {
+    if (query.trim().length === 0) {
       setResults([]);
+      setIsLoading(false);
+      return;
     }
 
-    setIsLoading(false);
-  };
+    const fetchCities = async () => {
+      setIsLoading(true);
 
-  const timeout = setTimeout(fetchCities, 400);
+      try {
+        const res = await fetch(
+          `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=8&appid=${process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY}`
+        );
 
-  return () => clearTimeout(timeout);
-}, [query]);
+        const data = await res.json();
 
+        // 🔥 IMPORTANT FIX → ensure data is an array
+        if (!Array.isArray(data)) {
+          setResults([]);
+          setIsLoading(false);
+          return;
+        }
+
+        const formatted = data.map((item: any) => ({
+          name: `${item.name}${item.state ? ', ' + item.state : ''} - ${item.country}`,
+          lat: item.lat,
+          lon: item.lon,
+        }));
+
+        setResults(formatted);
+      } catch {
+        setResults([]);
+      }
+
+      setIsLoading(false);
+    };
+
+    const timeout = setTimeout(fetchCities, 400);
+
+    return () => clearTimeout(timeout);
+  }, [query]);
 
   const handleSelect = (city: any) => {
     setQuery(city.name);
@@ -98,7 +96,7 @@ useEffect(() => {
             setIsOpen(true);
           }}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && query.trim().length > 0) {
+            if (e.key === 'Enter' && query.trim().length > 0) {
               if (results[0]) {
                 router.push(
                   `/detail?city=${encodeURIComponent(results[0].name)}&lat=${results[0].lat}&lon=${results[0].lon}`
@@ -166,7 +164,3 @@ useEffect(() => {
     </div>
   );
 }
-
-
-
-
