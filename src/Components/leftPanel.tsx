@@ -4,11 +4,10 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { SliceZone } from '@prismicio/react';
 import { components as Slices } from '@/slices';
-import { useSelector } from 'react-redux';
-
 import { WEATHER_ICONS, BACKGROUND_IMAGES } from '@/constants/images';
 import UnitToggle from '@/Components/UnitToggle';
-import { RootState } from '@/store';
+import { useWeatherAndForecast } from '../hooks/useWeather';
+import { useUnitToggle } from '../hooks/useUnit';
 
 const {
   clearDay,
@@ -66,32 +65,15 @@ const getWeatherIcon = (weather: any) => {
   return isNight ? clearNight : clearDay;
 };
 
-export default function LeftPanel({
-  weather,
-  forecast,
-  slices,
-}: {
-  weather: any;
-  forecast: any;
-  slices: any;
-}) {
+export default function LeftPanel({ slices }: { slices: any }) {
   const [currentTime, setCurrentTime] = useState('--:--');
-  const unit = useSelector((state: RootState) => state.unit.unit);
-  const symbol = unit === 'metric' ? '°C' : '°F';
-
-  const convert = (temp: number) => {
-    return unit === 'metric'
-      ? Math.round(temp)
-      : Math.round((temp * 9) / 5 + 32);
-  };
+  const { weather, forecast, loading } = useWeatherAndForecast('Karachi'); // Replace with dynamic city
+  const { convertTemperature, getSymbol } = useUnitToggle();
 
   useEffect(() => {
     const update = () =>
       setCurrentTime(
-        new Date().toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit',
-        })
+        new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       );
     update();
     const id = setInterval(update, 1000);
@@ -104,7 +86,6 @@ export default function LeftPanel({
     year: 'numeric',
   });
 
-  // Get today's max/min from forecast if available
   const todayTempMax =
     forecast?.list?.[0]?.main?.temp_max ?? weather?.main?.temp ?? 0;
   const todayTempMin =
@@ -160,38 +141,28 @@ export default function LeftPanel({
           <div className="text-xl sm:text-2xl font-semibold">{currentTime}</div>
         </div>
 
-        {/* Temp + Condition with inline toggle */}
-        {/* Temp + Condition with inline smaller toggle */}
+        {/* Temp + Condition */}
         <div className="absolute bottom-16 sm:bottom-10 left-4 text-white flex flex-col">
           <div className="flex items-center gap-2">
-            {/* Temperature number */}
             <span className="text-6xl sm:text-8xl md:text-8xl font-extrabold leading-none">
-              {weather ? `${convert(weather.main.temp)}` : `31`}
+              {weather ? convertTemperature(weather.main.temp) : '--'}
             </span>
-
-            {/* Inline UnitToggle matching temp size */}
             <UnitToggle />
           </div>
 
           <div className="text-sm sm:text-xl opacity-90 mt-1">
-            {/* Max / Min and description */}
             <div className="hidden sm:flex sm:flex-row sm:items-center sm:gap-2">
-              <span>{`${convert(weather.main.temp_max)}${unit === 'metric' ? '°C' : '°F'} / ${convert(
-                weather.main.temp_min
-              )}${unit === 'metric' ? '°C' : '°F'}`}</span>
+              <span>{`${convertTemperature(todayTempMax)}${getSymbol()} / ${convertTemperature(
+                todayTempMin
+              )}${getSymbol()}`}</span>
               <span>•</span>
-              <span className="capitalize">
-                {weather.weather[0].description}
-              </span>
+              <span className="capitalize">{weather?.weather[0].description}</span>
             </div>
-
             <div className="flex flex-col sm:hidden">
-              <span>{`${convert(weather.main.temp_max)}${unit === 'metric' ? '°C' : '°F'} / ${convert(
-                weather.main.temp_min
-              )}${unit === 'metric' ? '°C' : '°F'}`}</span>
-              <span className="capitalize">
-                {weather.weather[0].description}
-              </span>
+              <span>{`${convertTemperature(todayTempMax)}${getSymbol()} / ${convertTemperature(
+                todayTempMin
+              )}${getSymbol()}`}</span>
+              <span className="capitalize">{weather?.weather[0].description}</span>
             </div>
           </div>
         </div>
@@ -209,3 +180,4 @@ export default function LeftPanel({
     </div>
   );
 }
+

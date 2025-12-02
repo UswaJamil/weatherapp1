@@ -4,8 +4,7 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { SliceZone } from '@prismicio/react';
 import { components as Slices } from '@/slices';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/store';
+import { useUnitToggle } from '../hooks/useUnit';
 
 import { DETAIL_ICONS, FORECAST_ICONS } from '@/constants/images';
 
@@ -29,11 +28,9 @@ export default function RightPanel({
   slices: any[];
 }) {
   const [fiveDayData, setFiveDayData] = useState<any[]>([]);
-  const unit = useSelector((state: RootState) => state.unit.unit); // Redux unit
-  const tempSymbol = unit === 'metric' ? '°C' : '°F';
 
-  const convert = (temp: number) =>
-    unit === 'metric' ? Math.round(temp) : Math.round((temp * 9) / 5 + 32);
+  // Use hook for unit handling
+  const { convertTemperature: convert, getSymbol: tempSymbol } = useUnitToggle();
 
   useEffect(() => {
     if (forecast?.list) {
@@ -73,7 +70,7 @@ export default function RightPanel({
 
       setFiveDayData(daily);
     }
-  }, [forecast, unit]); // Recalculate when unit changes
+  }, [forecast, convert]); // Recalculate when forecast or convert changes
 
   const displayForecast =
     fiveDayData.length > 0
@@ -131,7 +128,7 @@ export default function RightPanel({
               icon: thermometerIcon,
               label: 'Feels Like',
               value: weather?.main?.feels_like
-                ? `${convert(weather.main.feels_like)}${tempSymbol}`
+                ? `${convert(weather.main.feels_like)}${tempSymbol()}`
                 : '—',
             },
             {
@@ -141,8 +138,8 @@ export default function RightPanel({
                 weather?.clouds?.all > 70
                   ? 'High'
                   : weather?.clouds?.all > 40
-                    ? 'Medium'
-                    : 'Low',
+                  ? 'Medium'
+                  : 'Low',
             },
             {
               icon: windLight,
@@ -168,7 +165,9 @@ export default function RightPanel({
           ].map((item, i) => (
             <div
               key={i}
-              className={`flex justify-between items-center py-4 border-b border-[#1C1C27] ${i === 4 ? 'border-none' : ''}`}
+              className={`flex justify-between items-center py-4 border-b border-[#1C1C27] ${
+                i === 4 ? 'border-none' : ''
+              }`}
             >
               <div className="flex items-center gap-3">
                 <Image
@@ -217,11 +216,11 @@ export default function RightPanel({
               <div className="flex flex-col sm:flex-row gap-1 font-bold text-[10px] sm:text-[14px]">
                 <span className="text-white">
                   {item.max}
-                  {tempSymbol}
+                  {tempSymbol()}
                 </span>
                 <span className="text-[#7f7f98]">
                   {item.min}
-                  {tempSymbol}
+                  {tempSymbol()}
                 </span>
               </div>
             </div>
