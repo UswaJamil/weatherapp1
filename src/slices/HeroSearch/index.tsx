@@ -1,10 +1,6 @@
 import { FC } from 'react';
 import { SliceComponentProps } from '@prismicio/react';
-
-/**
- * Props for `HeroSearch`.
- */
-export type HeroSearchProps = SliceComponentProps<any>;
+import { HeroSearchProps } from '@/constants/types';
 
 /**
  * Component for "HeroSearch" Slices.

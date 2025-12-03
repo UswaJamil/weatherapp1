@@ -6,8 +6,8 @@ import { SliceZone } from '@prismicio/react';
 import { components as Slices } from '@/slices';
 import { WEATHER_ICONS, BACKGROUND_IMAGES } from '@/constants/images';
 import UnitToggle from '@/Components/UnitToggle';
-import { useWeatherAndForecast } from '../hooks/useWeather';
 import { useUnitToggle } from '../hooks/useUnit';
+import { COLORS } from '@/constants/colors';
 
 const {
   clearDay,
@@ -65,9 +65,16 @@ const getWeatherIcon = (weather: any) => {
   return isNight ? clearNight : clearDay;
 };
 
-export default function LeftPanel({ slices }: { slices: any }) {
+export default function LeftPanel({
+  weather,
+  forecast,
+  slices
+}: {
+  weather: any;
+  forecast: any;
+  slices: any[];
+}) {
   const [currentTime, setCurrentTime] = useState('--:--');
-  const { weather, forecast, loading } = useWeatherAndForecast('Karachi'); // Replace with dynamic city
   const { convertTemperature, getSymbol } = useUnitToggle();
 
   useEffect(() => {
@@ -92,11 +99,12 @@ export default function LeftPanel({ slices }: { slices: any }) {
     forecast?.list?.[0]?.main?.temp_min ?? weather?.main?.temp ?? 0;
 
   return (
-    <div className="flex flex-col gap-4 w-full lg:w-1/2 bg-[#16161F] p-4 rounded-xl relative">
+    <div className="flex flex-col gap-4 w-full lg:w-1/2 p-4 rounded-xl relative" style={{ backgroundColor: COLORS.panelBg }}>
       {/* Logo + Search */}
       <div className="flex items-center gap-3 w-full h-14">
         <div
-          className="w-14 h-14 bg-[#1e1e29] rounded-lg flex items-center justify-center cursor-pointer hover:opacity-80 transition"
+          className="w-14 h-14 rounded-lg flex items-center justify-center cursor-pointer hover:opacity-80 transition"
+          style={{ backgroundColor: COLORS.inputBg }}
           onClick={() => (window.location.href = '/')}
         >
           <img
@@ -111,7 +119,11 @@ export default function LeftPanel({ slices }: { slices: any }) {
         <input
           type="text"
           placeholder="Buscar local..."
-          className="flex-1 h-14 bg-[#1e1e29] rounded-lg text-[#cfcfcf] px-5 placeholder:text-[#7a7a8a] focus:outline-none"
+          className="flex-1 h-14 rounded-lg px-5 focus:outline-none"
+          style={{
+            backgroundColor: COLORS.inputBg,
+            color: COLORS.textMuted,
+          }}
         />
       </div>
 
@@ -131,7 +143,7 @@ export default function LeftPanel({ slices }: { slices: any }) {
         }}
       >
         {/* City & Time */}
-        <div className="absolute top-4 left-4 right-4 flex justify-between text-white text-sm sm:text-base">
+        <div className="absolute top-4 left-4 right-4 flex justify-between text-sm sm:text-base" style={{ color: COLORS.textPrimary }}>
           <div>
             <h1 className="text-xl sm:text-2xl font-bold">
               {weather?.name || 'Karachi'}
@@ -142,7 +154,7 @@ export default function LeftPanel({ slices }: { slices: any }) {
         </div>
 
         {/* Temp + Condition */}
-        <div className="absolute bottom-16 sm:bottom-10 left-4 text-white flex flex-col">
+        <div className="absolute bottom-16 sm:bottom-10 left-4 flex flex-col" style={{ color: COLORS.textPrimary }}>
           <div className="flex items-center gap-2">
             <span className="text-6xl sm:text-8xl md:text-8xl font-extrabold leading-none">
               {weather ? convertTemperature(weather.main.temp) : '--'}

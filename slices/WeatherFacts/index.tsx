@@ -1,11 +1,7 @@
 import { FC } from 'react';
 import { Content } from '@prismicio/client';
 import { SliceComponentProps } from '@prismicio/react';
-
-/**
- * Props for `WeatherFacts`.
- */
-export type WeatherFactsProps = SliceComponentProps<Content.WeatherFactsSlice>;
+import { WeatherFactsProps } from '@/constants/types';
 
 /**
  * Component for "WeatherFacts" Slices.

@@ -1,28 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { ForecastListItem, ForecastState } from '@/constants/types';
 
-interface ForecastListItem {
-  dt: number;
-  dt_txt: string;
-  main: {
-    temp: number;
-    temp_max: number;
-    temp_min: number;
-    humidity: number;
-  };
-  weather: Array<{
-    main: string;
-    description: string;
-    icon: string;
-  }>;
-}
-
-interface ForecastState {
-  data: {
-    list: ForecastListItem[];
-  } | null;
-  loading: boolean;
-  error: string | null;
-}
+const API_KEY = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
 
 const initialState: ForecastState = {
   data: null,
@@ -33,12 +12,46 @@ const initialState: ForecastState = {
 export const fetchForecast = createAsyncThunk(
   'forecast/fetch5Day',
   async (
-    { city, apiKey }: { city: string; apiKey: string },
+    city: string,
     { rejectWithValue }
   ) => {
+    if (!API_KEY) {
+      return rejectWithValue('API key not configured');
+    }
+
     try {
       const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`,
+        `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${API_KEY}`,
+        { cache: 'no-store' }
+      );
+      if (!response.ok) {
+        throw new Error(`Forecast API error: ${response.statusText}`);
+      }
+      return await response.json();
+    } catch (error) {
+      return rejectWithValue(
+        error instanceof Error ? error.message : 'Failed to fetch forecast'
+      );
+    }
+  }
+);
+
+export const fetchForecastByCoords = createAsyncThunk<
+  any,
+  { lat: number; lon: number }
+>(
+  'forecast/fetchByCoords',
+  async (
+    { lat, lon },
+    { rejectWithValue }
+  ) => {
+    if (!API_KEY) {
+      return rejectWithValue('API key not configured');
+    }
+
+    try {
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`,
         { cache: 'no-store' }
       );
       if (!response.ok) {
@@ -73,6 +86,19 @@ const forecastSlice = createSlice({
         state.data = action.payload;
       })
       .addCase(fetchForecast.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+        state.data = null;
+      })
+      .addCase(fetchForecastByCoords.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchForecastByCoords.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload;
+      })
+      .addCase(fetchForecastByCoords.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
         state.data = null;

@@ -1,19 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { SearchResult, SearchState } from '@/constants/types';
 
-export interface SearchResult {
-  name: string;
-  state?: string;
-  country: string;
-  lat: number;
-  lon: number;
-}
-
-interface SearchState {
-  results: SearchResult[];
-  loading: boolean;
-  error: string | null;
-  query: string;
-}
+const API_KEY = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
 
 const initialState: SearchState = {
   results: [],
@@ -25,16 +13,20 @@ const initialState: SearchState = {
 export const fetchSearchResults = createAsyncThunk(
   'search/fetchResults',
   async (
-    { query, apiKey }: { query: string; apiKey: string },
+    query: string,
     { rejectWithValue }
   ) => {
     if (!query.trim()) {
       return [];
     }
 
+    if (!API_KEY) {
+      return rejectWithValue('API key not configured');
+    }
+
     try {
       const response = await fetch(
-        `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=8&appid=${apiKey}`
+        `https://api.openweathermap.org/geo/1.0/direct?q=${query}&limit=8&appid=${API_KEY}`
       );
 
       if (!response.ok) {

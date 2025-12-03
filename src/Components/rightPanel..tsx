@@ -7,6 +7,7 @@ import { components as Slices } from '@/slices';
 import { useUnitToggle } from '../hooks/useUnit';
 
 import { DETAIL_ICONS, FORECAST_ICONS } from '@/constants/images';
+import { COLORS } from '@/constants/colors';
 
 const {
   thermometer: thermometerIcon,
@@ -117,8 +118,8 @@ export default function RightPanel({
     <div className="w-full lg:w-1/2 flex flex-col gap-4 ">
       <SliceZone slices={slices} components={Slices} />
 
-      <div className="bg-[#16161F] p-6 pb-2 rounded-xl sm:p-3">
-        <h2 className="hidden sm:block text-[16px] font-normal text-[#7f7f98] mb-4">
+      <div className="p-6 pb-2 rounded-xl sm:p-3" style={{ backgroundColor: COLORS.panelBg }}>
+        <h2 className="hidden sm:block text-[16px] font-normal mb-4" style={{ color: COLORS.placeholderPrimary }}>
           Detalhes do clima hoje
         </h2>
 
@@ -165,9 +166,12 @@ export default function RightPanel({
           ].map((item, i) => (
             <div
               key={i}
-              className={`flex justify-between items-center py-4 border-b border-[#1C1C27] ${
+              className={`flex justify-between items-center py-4 ${
                 i === 4 ? 'border-none' : ''
               }`}
+              style={{
+                borderBottomColor: i === 4 ? 'transparent' : COLORS.borderMuted,
+              }}
             >
               <div className="flex items-center gap-3">
                 <Image
@@ -177,11 +181,11 @@ export default function RightPanel({
                   width={32}
                   height={32}
                 />
-                <span className="text-[14px] font-bold text-[#BFBFD4]">
+                <span className="text-[14px] font-bold" style={{ color: COLORS.textAccent }}>
                   {item.label}
                 </span>
               </div>
-              <span className="text-[20px] font-bold sm:text-[16px] text-white">
+              <span className="text-[20px] font-bold sm:text-[16px]" style={{ color: COLORS.textPrimary }}>
                 {item.value}
               </span>
             </div>
@@ -189,8 +193,8 @@ export default function RightPanel({
         </div>
       </div>
 
-      <div className="bg-[#16161F] p-4 sm:p-6 rounded-xl">
-        <h2 className="hidden sm:block text-[16px] font-normal text-[#7f7f98] mb-4">
+      <div className="p-4 sm:p-6 rounded-xl" style={{ backgroundColor: COLORS.panelBg }}>
+        <h2 className="hidden sm:block text-[16px] font-normal mb-4" style={{ color: COLORS.placeholderPrimary }}>
           Previsão para 5 dias
         </h2>
 
@@ -200,7 +204,7 @@ export default function RightPanel({
               key={i}
               className="flex flex-col items-center gap-1 sm:gap-2 p-1 sm:p-2 min-w-0"
             >
-              <span className="text-[10px] sm:text-[14px] text-[#BFBFD4] font-bold text-center truncate">
+              <span className="text-[10px] sm:text-[14px] font-bold text-center truncate" style={{ color: COLORS.textAccent }}>
                 {item.day}
               </span>
               <Image
@@ -210,15 +214,15 @@ export default function RightPanel({
                 width={55}
                 height={55}
               />
-              <span className="hidden sm:block text-[9px] sm:text-[14px] text-[#BFBFD4] text-center truncate">
+              <span className="hidden sm:block text-[9px] sm:text-[14px] text-center truncate" style={{ color: COLORS.textAccent }}>
                 {item.desc}
               </span>
               <div className="flex flex-col sm:flex-row gap-1 font-bold text-[10px] sm:text-[14px]">
-                <span className="text-white">
+                <span style={{ color: COLORS.textPrimary }}>
                   {item.max}
                   {tempSymbol()}
                 </span>
-                <span className="text-[#7f7f98]">
+                <span style={{ color: COLORS.placeholderPrimary }}>
                   {item.min}
                   {tempSymbol()}
                 </span>

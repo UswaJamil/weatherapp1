@@ -6,9 +6,7 @@ import {
   clearSearch,
   SearchResult,
 } from '@/store/slices/searchSlice';
-import { RootState, AppDispatch } from '@/store';
-
-const API_KEY = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
+import { RootState, AppDispatch } from '@/constants/types';
 
 export const useLocationSearch = (debounceTime = 400) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -25,9 +23,7 @@ export const useLocationSearch = (debounceTime = 400) => {
 
     const timeout = setTimeout(() => {
       dispatch(setQuery(localQuery));
-      if (API_KEY) {
-        dispatch(fetchSearchResults({ query: localQuery, apiKey: API_KEY }));
-      }
+      dispatch(fetchSearchResults(localQuery));
     }, debounceTime);
 
     return () => clearTimeout(timeout);

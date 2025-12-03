@@ -1,10 +1,8 @@
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchWeather } from '@/store/slices/weatherSlice';
-import { fetchForecast } from '@/store/slices/forecastSlice';
-import { RootState, AppDispatch } from '@/store';
-
-const API_KEY = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
+import { fetchWeather, fetchWeatherByCoords as fetchWeatherCoordsThunk } from '@/store/slices/weatherSlice';
+import { fetchForecast, fetchForecastByCoords as fetchForecastCoordsThunk } from '@/store/slices/forecastSlice';
+import { RootState, AppDispatch } from '@/constants/types';
 
 /**
  * Hook to fetch and manage current weather data
@@ -18,9 +16,14 @@ export const useWeatherData = () => {
 
   const fetchWeatherByCity = useCallback(
     (city: string) => {
-      if (API_KEY) {
-        dispatch(fetchWeather({ city, apiKey: API_KEY }));
-      }
+      dispatch(fetchWeather(city));
+    },
+    [dispatch]
+  );
+
+  const fetchWeatherByCoords = useCallback(
+    (lat: number, lon: number) => {
+      dispatch(fetchWeatherCoordsThunk({ lat, lon }));
     },
     [dispatch]
   );
@@ -30,6 +33,7 @@ export const useWeatherData = () => {
     loading,
     error,
     fetchWeatherByCity,
+    fetchWeatherByCoords,
   };
 };
 
@@ -45,9 +49,14 @@ export const useForecastData = () => {
 
   const fetchForecastByCity = useCallback(
     (city: string) => {
-      if (API_KEY) {
-        dispatch(fetchForecast({ city, apiKey: API_KEY }));
-      }
+      dispatch(fetchForecast(city));
+    },
+    [dispatch]
+  );
+
+  const fetchForecastByCoords = useCallback(
+    (lat: number, lon: number) => {
+      dispatch(fetchForecastCoordsThunk({ lat, lon }));
     },
     [dispatch]
   );
@@ -57,6 +66,7 @@ export const useForecastData = () => {
     loading,
     error,
     fetchForecastByCity,
+    fetchForecastByCoords,
   };
 };
 
@@ -64,24 +74,31 @@ export const useForecastData = () => {
  * Combined hook to fetch both weather and forecast data
  * Returns both datasets and loading state
  */
-export const useWeatherAndForecast = (city: string) => {
+export const useWeatherAndForecast = (city: string, lat?: number, lon?: number) => {
   const {
     weather,
     loading: weatherLoading,
     fetchWeatherByCity,
+    fetchWeatherByCoords,
   } = useWeatherData();
   const {
     forecast,
     loading: forecastLoading,
     fetchForecastByCity,
+    fetchForecastByCoords,
   } = useForecastData();
 
   useEffect(() => {
-    if (city) {
+    if (lat !== undefined && lon !== undefined) {
+      // Use coordinates for more accurate results
+      fetchWeatherByCoords(lat, lon);
+      fetchForecastByCoords(lat, lon);
+    } else if (city) {
+      // Fallback to city name
       fetchWeatherByCity(city);
       fetchForecastByCity(city);
     }
-  }, [city, fetchWeatherByCity, fetchForecastByCity]);
+  }, [city, lat, lon, fetchWeatherByCity, fetchWeatherByCoords, fetchForecastByCity, fetchForecastByCoords]);
 
   return {
     weather,

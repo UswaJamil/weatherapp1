@@ -3,11 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useLocationSearch, useLocationSelect } from '../hooks/useSearch';
-import { SearchResult } from '@/store/slices/searchSlice';
-
-interface SearchInputProps {
-  placeholder?: string;
-}
+import { SearchResult, SearchInputProps } from '@/constants/types';
+import { COLORS } from '@/constants/colors';
 
 export default function SearchInput({ placeholder = 'Search Location' }: SearchInputProps) {
   const router = useRouter();
@@ -37,13 +34,27 @@ export default function SearchInput({ placeholder = 'Search Location' }: SearchI
   };
 
   return (
-    <div ref={wrapperRef} className="relative w-full max-w-[360px] mx-auto">
+    <>
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          @keyframes spin {
+            to {
+              transform: rotate(360deg);
+            }
+          }
+        `
+      }} />
+      <div ref={wrapperRef} className="relative w-full max-w-[360px] mx-auto">
       {/* INPUT */}
       <div className="relative">
         <input
           type="text"
           placeholder={placeholder}
-          className="w-full h-[52px] rounded-xl px-5 pr-12 bg-[#1E1E29] text-[#F1F1F5] font-nunito shadow-[0_4px_30px_rgba(0,0,0,0.25)] outline-none placeholder:text-[#7F7F98] text-left"
+          className="w-full h-[52px] rounded-xl px-5 pr-12 font-nunito shadow-[0_4px_30px_rgba(0,0,0,0.25)] outline-none text-left"
+          style={{
+            backgroundColor: COLORS.inputBg,
+            color: COLORS.textLightAlt,
+          }}
           value={query}
           onChange={(e) => {
             search(e.target.value);
@@ -60,24 +71,43 @@ export default function SearchInput({ placeholder = 'Search Location' }: SearchI
         {/* LOADER */}
         {loading && (
           <div className="absolute right-4 top-1/2 -translate-y-1/2">
-            <div className="loader-spinner" />
+            <div
+              style={{
+                width: '22px',
+                height: '22px',
+                display: 'inline-block',
+                borderRadius: '50%',
+                border: '3px solid rgba(150, 170, 200, 0.35)',
+                borderTopColor: 'rgba(150, 170, 200, 0.9)',
+                animation: 'spin 0.8s linear infinite',
+              }}
+            />
           </div>
         )}
       </div>
 
       {/* DROPDOWN */}
       {isOpen && query.length > 0 && !loading && (
-        <div className="absolute top-[60px] left-0 w-full rounded-xl bg-[#3B3B54]/95 backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.35)] animate-fadeIn overflow-hidden z-50">
+        <div className="absolute top-[60px] left-0 w-full rounded-xl backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.35)] animate-fadeIn overflow-hidden z-50" style={{ backgroundColor: `${COLORS.cardBg}95` }}>
           {results.length === 0 ? (
-            <div className="px-4 py-3 text-[#FAFAFA] font-nunito opacity-70">
+            <div className="px-4 py-3 font-nunito opacity-70" style={{ color: COLORS.textLight }}>
               No matching locations
             </div>
           ) : (
-            <ul className="text-[#FAFAFA] text-[15px] font-nunito text-left">
-              {results.map((city) => (
+            <ul className="text-[15px] font-nunito text-left" style={{ color: COLORS.textLight }}>
+              {results.map((city: SearchResult) => (
                 <li
                   key={`${city.lat}-${city.lon}`}
-                  className="px-4 py-3 border-b border-[#1E1E29] cursor-pointer hover:bg-[#4A4A66] transition"
+                  className="px-4 py-3 cursor-pointer transition"
+                  style={{
+                    borderBottomColor: COLORS.cardBorder,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = COLORS.hoverBg;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                  }}
                   onMouseDown={() => handleSelect(city)}
                 >
                   {selectLocation(city)}
@@ -88,5 +118,6 @@ export default function SearchInput({ placeholder = 'Search Location' }: SearchI
         </div>
       )}
     </div>
+    </>
   );
 }

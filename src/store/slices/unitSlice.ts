@@ -1,8 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-interface UnitState {
-  unit: 'metric' | 'imperial';
-}
+import { UnitState } from '@/constants/types';
 
 const initialState: UnitState = {
   unit: 'metric',
