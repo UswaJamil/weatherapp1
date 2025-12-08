@@ -52,11 +52,11 @@ const Hero = ({ page }: any) => {
         >
           {/* Content wrapper */}
           <div className="w-full max-w-sm md:max-w-2xl text-center">
-            <h1 className="text-[clamp(26px,6vw,26px)] font-bold text-center leading-tight -tracking-[0.3px]" style={{ color: COLORS.textPrimary }}>
+            <h1 className="text-[clamp(32px,6vw,32px)] font-bold text-center leading-tight -tracking-[0.3px]" style={{ color: COLORS.textPrimary }}>
               {page.data.heading}
             </h1>
 
-            <p className="text-[clamp(16px,3.5vw,16px)] opacity-[0.88] mt-2 mb-5 text-center leading-[1.35] -tracking-[0.2px]" style={{ color: COLORS.textSecondary }}>
+            <p className="text-[clamp(20px,3.5vw,20px)] opacity-[0.88] mt-2 mb-5 text-center leading-[1.35] -tracking-[0.2px]" style={{ color: COLORS.textSecondary }}>
               {page.data.subtitle}
             </p>
 

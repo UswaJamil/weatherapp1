@@ -4,9 +4,8 @@ import {
   fetchSearchResults,
   setQuery,
   clearSearch,
-  SearchResult,
 } from '@/store/slices/searchSlice';
-import { RootState, AppDispatch } from '@/constants/types';
+import { RootState, AppDispatch, SearchResult } from '@/constants/types';
 
 export const useLocationSearch = (debounceTime = 400) => {
   const dispatch = useDispatch<AppDispatch>();

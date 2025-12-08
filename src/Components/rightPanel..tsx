@@ -77,42 +77,42 @@ export default function RightPanel({
     fiveDayData.length > 0
       ? fiveDayData
       : [
-          {
-            day: 'Tomorrow',
-            icon: rain,
-            desc: 'Rain',
-            max: convert(32),
-            min: convert(26),
-          },
-          {
-            day: 'Wednesday',
-            icon: rain,
-            desc: 'Rain',
-            max: convert(31),
-            min: convert(25),
-          },
-          {
-            day: 'Thursday',
-            icon: rainCloud,
-            desc: 'Few Clouds',
-            max: convert(29),
-            min: convert(24),
-          },
-          {
-            day: 'Friday',
-            icon: cloudy,
-            desc: 'Cloudy',
-            max: convert(30),
-            min: convert(23),
-          },
-          {
-            day: 'Saturday',
-            icon: sunDim,
-            desc: 'Sunny',
-            max: convert(33),
-            min: convert(27),
-          },
-        ];
+        {
+          day: 'Tomorrow',
+          icon: rain,
+          desc: 'Rain',
+          max: convert(32),
+          min: convert(26),
+        },
+        {
+          day: 'Wednesday',
+          icon: rain,
+          desc: 'Rain',
+          max: convert(31),
+          min: convert(25),
+        },
+        {
+          day: 'Thursday',
+          icon: rainCloud,
+          desc: 'Few Clouds',
+          max: convert(29),
+          min: convert(24),
+        },
+        {
+          day: 'Friday',
+          icon: cloudy,
+          desc: 'Cloudy',
+          max: convert(30),
+          min: convert(23),
+        },
+        {
+          day: 'Saturday',
+          icon: sunDim,
+          desc: 'Sunny',
+          max: convert(33),
+          min: convert(27),
+        },
+      ];
 
   return (
     <div className="w-full lg:w-1/2 flex flex-col gap-4 ">
@@ -139,8 +139,8 @@ export default function RightPanel({
                 weather?.clouds?.all > 70
                   ? 'High'
                   : weather?.clouds?.all > 40
-                  ? 'Medium'
-                  : 'Low',
+                    ? 'Medium'
+                    : 'Low',
             },
             {
               icon: windLight,
@@ -166,9 +166,8 @@ export default function RightPanel({
           ].map((item, i) => (
             <div
               key={i}
-              className={`flex justify-between items-center py-4 ${
-                i === 4 ? 'border-none' : ''
-              }`}
+              className={`flex justify-between items-center py-4 ${i === 4 ? 'border-none' : ''
+                }`}
               style={{
                 borderBottomColor: i === 4 ? 'transparent' : COLORS.borderMuted,
               }}

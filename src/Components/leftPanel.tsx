@@ -1,12 +1,15 @@
 'use client';
 
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { SliceZone } from '@prismicio/react';
 import { components as Slices } from '@/slices';
 import { WEATHER_ICONS, BACKGROUND_IMAGES } from '@/constants/images';
 import UnitToggle from '@/Components/UnitToggle';
 import { useUnitToggle } from '../hooks/useUnit';
+import { useLocationSearch, useLocationSelect } from '../hooks/useSearch';
+import { SearchResult } from '@/constants/types';
 import { COLORS } from '@/constants/colors';
 
 const {
@@ -74,8 +77,34 @@ export default function LeftPanel({
   forecast: any;
   slices: any[];
 }) {
+  const router = useRouter();
   const [currentTime, setCurrentTime] = useState('--:--');
   const { convertTemperature, getSymbol } = useUnitToggle();
+
+  // Search Logic
+  const [isOpen, setIsOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const { results, loading, query, search } = useLocationSearch();
+  const { selectLocation } = useLocationSelect();
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSelect = (city: SearchResult) => {
+    const formatted = selectLocation(city);
+    setIsOpen(false);
+    router.push(
+      `/detail?city=${encodeURIComponent(formatted)}&lat=${city.lat}&lon=${city.lon}`
+    );
+  };
 
   useEffect(() => {
     const update = () =>
@@ -116,15 +145,59 @@ export default function LeftPanel({
             className="w-10 h-10 object-contain"
           />
         </div>
-        <input
-          type="text"
-          placeholder="Buscar local..."
-          className="flex-1 h-14 rounded-lg px-5 focus:outline-none"
-          style={{
-            backgroundColor: COLORS.inputBg,
-            color: COLORS.textMuted,
-          }}
-        />
+        <div ref={wrapperRef} className="relative flex-1 h-14">
+          <input
+            type="text"
+            placeholder="Buscar local..."
+            className="w-full h-full rounded-lg px-5 focus:outline-none"
+            style={{
+              backgroundColor: COLORS.inputBg,
+              color: COLORS.textMuted,
+            }}
+            value={query}
+            onChange={(e) => {
+              search(e.target.value);
+              setIsOpen(true);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && query.trim().length > 0 && results[0]) {
+                handleSelect(results[0]);
+              }
+            }}
+            onFocus={() => setIsOpen(true)}
+          />
+          {/* DROPDOWN */}
+          {isOpen && query.length > 0 && !loading && (
+            <div className="absolute top-[60px] left-0 w-full rounded-xl backdrop-blur-xl shadow-[0_4px_30px_rgba(0,0,0,0.35)] animate-fadeIn overflow-hidden z-50" style={{ backgroundColor: `${COLORS.cardBg}95` }}>
+              {results.length === 0 ? (
+                <div className="px-4 py-3 font-nunito opacity-70" style={{ color: COLORS.textLight }}>
+                  No matching locations
+                </div>
+              ) : (
+                <ul className="text-[15px] font-nunito text-left" style={{ color: COLORS.textLight }}>
+                  {results.map((city: SearchResult) => (
+                    <li
+                      key={`${city.lat}-${city.lon}`}
+                      className="px-4 py-3 cursor-pointer transition"
+                      style={{
+                        borderBottomColor: COLORS.cardBorder,
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = COLORS.hoverBg;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'transparent';
+                      }}
+                      onMouseDown={() => handleSelect(city)}
+                    >
+                      {selectLocation(city)}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* SliceZone */}
@@ -132,14 +205,14 @@ export default function LeftPanel({
 
       {/* Weather Card */}
       <div
-        className="relative rounded-lg overflow-hidden h-[520px] md:h-[460px] sm:h-[380px] xs:h-[300px]"
+        className="relative rounded-lg overflow-hidden h-[632px] md:h-[460px] sm:h-[335px] xs:h-[300px]"
         style={{
-          backgroundImage: `url(${
-            getBackgroundImage(weather)?.default?.src ||
+          backgroundImage: `url(${getBackgroundImage(weather)?.default?.src ||
             getBackgroundImage(weather)?.src
-          })`,
+            })`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          
         }}
       >
         {/* City & Time */}

@@ -44,7 +44,7 @@ export default function SearchInput({ placeholder = 'Search Location' }: SearchI
           }
         `
       }} />
-      <div ref={wrapperRef} className="relative w-full max-w-[360px] mx-auto">
+      <div ref={wrapperRef} className="relative w-full max-w-[504px] mx-auto">
       {/* INPUT */}
       <div className="relative">
         <input
