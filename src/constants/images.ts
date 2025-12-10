@@ -26,18 +26,18 @@ import sunDim from '@/assets/icons/sunny.png';
 import rain from '@/assets/icons/rain.png';
 
 // Background Images
-const clearDayBg = require('@/assets/images/clearDay.png');
-const clearNightBg = require('@/assets/images/clearNight.png');
-const cloudyDayBg = require('@/assets/images/cloudyDay.png');
-const cloudyNightBg = require('@/assets/images/cloudyNight.png');
-const fewcloudsDayBg = require('@/assets/images/fewcloudsDay.png');
-const fewcloudsNightBg = require('@/assets/images/fewcloudsNight.png');
-const rainDayBg = require('@/assets/images/rainDay.png');
-const rainNightBg = require('@/assets/images/rainNight.png');
-const snowDayBg = require('@/assets/images/snowDay.png');
-const snowNightBg = require('@/assets/images/snowNight.png');
-const stormDayBg = require('@/assets/images/stormDay.png');
-const stormNightBg = require('@/assets/images/stormNight.png');
+import clearDayBg from '@/assets/images/clearDay.png';
+import clearNightBg from '@/assets/images/clearNight.png';
+import cloudyDayBg from '@/assets/images/cloudyDay.png';
+import cloudyNightBg from '@/assets/images/cloudyNight.png';
+import fewcloudsDayBg from '@/assets/images/fewcloudsDay.png';
+import fewcloudsNightBg from '@/assets/images/fewcloudsNight.png';
+import rainDayBg from '@/assets/images/rainDay.png';
+import rainNightBg from '@/assets/images/rainNight.png';
+import snowDayBg from '@/assets/images/snowDay.png';
+import snowNightBg from '@/assets/images/snowNight.png';
+import stormDayBg from '@/assets/images/stormDay.png';
+import stormNightBg from '@/assets/images/stormNight.png';
 
 export const WEATHER_ICONS = {
   clearDay,

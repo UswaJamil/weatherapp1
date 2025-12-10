@@ -40,12 +40,12 @@ export const fetchSearchResults = createAsyncThunk(
         return [];
       }
 
-      return data.map((item: any) => ({
-        name: item.name,
-        state: item.state,
-        country: item.country,
-        lat: item.lat,
-        lon: item.lon,
+      return data.map((item: Record<string, unknown>) => ({
+        name: String(item.name),
+        state: (item.state as string) || undefined,
+        country: String(item.country),
+        lat: Number(item.lat),
+        lon: Number(item.lon),
       }));
     } catch (error) {
       return rejectWithValue(

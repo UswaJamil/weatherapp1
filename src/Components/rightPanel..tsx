@@ -4,6 +4,8 @@ import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { SliceZone } from '@prismicio/react';
 import { components as Slices } from '@/slices';
+import type { ForecastState, WeatherState, ForecastListItem } from '@/constants/types';
+import type { StaticImageData } from 'next/image';
 import { useUnitToggle } from '../hooks/useUnit';
 
 import { DETAIL_ICONS, FORECAST_ICONS } from '@/constants/images';
@@ -19,16 +21,24 @@ const {
 
 const { cloudy, rainCloud, sunDim, rain } = FORECAST_ICONS;
 
+type DayForecast = {
+  day: string;
+  icon: string | StaticImageData;
+  desc: string;
+  max: number;
+  min: number;
+};
+
 export default function RightPanel({
   weather,
   forecast,
   slices,
 }: {
-  weather: any;
-  forecast: any;
-  slices: any[];
+  weather: WeatherState['current'] | null;
+  forecast: ForecastState['data'] | null;
+  slices: unknown[];
 }) {
-  const [fiveDayData, setFiveDayData] = useState<any[]>([]);
+  const [fiveDayData, setFiveDayData] = useState<DayForecast[]>([]);
 
   // Use hook for unit handling
   const { convertTemperature: convert, getSymbol: tempSymbol } = useUnitToggle();
@@ -36,11 +46,11 @@ export default function RightPanel({
   useEffect(() => {
     if (forecast?.list) {
       const daily = forecast.list
-        .filter((item: any) => item.dt_txt.includes('12:00:00'))
-        .slice(0, 5)
-        .map((day: any, index: number) => {
-          const condition = day.weather[0].main.toLowerCase();
-          const desc = day.weather[0].description.toLowerCase();
+          .filter((item: ForecastListItem) => item.dt_txt.includes('12:00:00'))
+          .slice(0, 5)
+          .map((day: ForecastListItem, index: number) => {
+            const condition = day.weather[0].main.toLowerCase();
+            const desc = day.weather[0].description.toLowerCase();
 
           let icon = sunDim;
           if (condition.includes('rain') || condition.includes('drizzle')) {

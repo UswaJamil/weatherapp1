@@ -98,10 +98,10 @@ export interface UnitToggleProps {
 // Slice Component Prop Types
 // ============================================================================
 
-export type WeatherOverviewProps = any; // Using any for Prismic types for now
-export type WeatherForecastProps = any; // Using any for Prismic types for now
-export type WeatherFactsProps = any; // Using any for Prismic types for now
-export type HeroSearchProps = any; // Using any for Prismic types for now
+export type WeatherOverviewProps = unknown; // use specific Prismic types if available
+export type WeatherForecastProps = unknown;
+export type WeatherFactsProps = unknown;
+export type HeroSearchProps = unknown;
 
 // ============================================================================
 // Utility Types
@@ -117,5 +117,6 @@ export { COLORS };
 // Redux Store Types
 // ============================================================================
 
-export type RootState = any; // Defined in store/index.ts
-export type AppDispatch = any; // Defined in store/index.ts
+import type { RootState as StoreRootState, AppDispatch as StoreAppDispatch } from '@/store';
+export type RootState = StoreRootState;
+export type AppDispatch = StoreAppDispatch;

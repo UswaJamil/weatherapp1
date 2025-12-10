@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { SliceZone } from '@prismicio/react';
 import { components as Slices } from '@/slices';
 import { WEATHER_ICONS, BACKGROUND_IMAGES } from '@/constants/images';
+import type { WeatherState, ForecastState } from '@/constants/types';
+import type { StaticImageData } from 'next/image';
 import UnitToggle from '@/Components/UnitToggle';
 import { useUnitToggle } from '../hooks/useUnit';
 import { useLocationSearch, useLocationSelect } from '../hooks/useSearch';
@@ -29,11 +31,10 @@ const {
 
 const backgrounds = BACKGROUND_IMAGES;
 
-const getBackgroundImage = (weather: any) => {
+const getBackgroundImage = (weather: WeatherState['current'] | null, isNight: boolean) => {
   if (!weather || !weather.weather?.[0]) return backgrounds['Clear-Day'];
   const main = weather.weather[0].main.toLowerCase();
   const desc = weather.weather[0].description.toLowerCase();
-  const isNight = new Date().getHours() >= 18 || new Date().getHours() < 6;
   const time = isNight ? 'Night' : 'Day';
 
   if (main.includes('thunderstorm') || desc.includes('storm'))
@@ -49,11 +50,10 @@ const getBackgroundImage = (weather: any) => {
   return backgrounds[`Clear-${time}`];
 };
 
-const getWeatherIcon = (weather: any) => {
-  if (!weather || !weather.weather?.[0]) return clearDay;
+const getWeatherIcon = (weather: WeatherState['current'] | null, isNight: boolean) => {
+  if (!weather || !weather.weather?.[0]) return isNight ? clearNight : clearDay;
   const main = weather.weather[0].main.toLowerCase();
   const desc = weather.weather[0].description.toLowerCase();
-  const isNight = new Date().getHours() >= 18 || new Date().getHours() < 6;
 
   if (main.includes('thunderstorm') || desc.includes('storm'))
     return isNight ? stormNight : stormDay;
@@ -73,9 +73,9 @@ export default function LeftPanel({
   forecast,
   slices
 }: {
-  weather: any;
-  forecast: any;
-  slices: any[];
+  weather: WeatherState['current'] | null;
+  forecast: ForecastState['data'] | null;
+  slices: unknown[];
 }) {
   const router = useRouter();
   const [currentTime, setCurrentTime] = useState('--:--');
@@ -116,11 +116,40 @@ export default function LeftPanel({
     return () => clearInterval(id);
   }, []);
 
-  const formattedDate = new Date().toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  });
+  // Client-only derived values to avoid SSR/client mismatches
+  const [mounted, setMounted] = useState(false);
+  const [backgroundSrc, setBackgroundSrc] = useState<string | null>(null);
+  const [weatherIconSrc, setWeatherIconSrc] = useState<string | StaticImageData | null>(null);
+  const [clientFormattedDate, setClientFormattedDate] = useState<string>('');
+
+  useEffect(() => {
+    setMounted(true);
+
+    const isNight = new Date().getHours() >= 18 || new Date().getHours() < 6;
+    try {
+      const bg = getBackgroundImage(weather, isNight);
+      setBackgroundSrc(bg?.default?.src || bg?.src || null);
+    } catch (e) {
+      setBackgroundSrc(null);
+    }
+
+    try {
+      const icon = getWeatherIcon(weather, isNight);
+      setWeatherIconSrc(icon?.default?.src || icon?.src || icon);
+    } catch (e) {
+      setWeatherIconSrc(null);
+    }
+
+    setClientFormattedDate(
+      new Date().toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+      })
+    );
+  }, [weather]);
+
+  const formattedDate = clientFormattedDate || '';
 
   const todayTempMax =
     forecast?.list?.[0]?.main?.temp_max ?? weather?.main?.temp ?? 0;
@@ -207,13 +236,11 @@ export default function LeftPanel({
       <div
         className="relative rounded-lg overflow-hidden h-[632px] md:h-[460px] sm:h-[335px] xs:h-[300px]"
         style={{
-          backgroundImage: `url(${getBackgroundImage(weather)?.default?.src ||
-            getBackgroundImage(weather)?.src
-            })`,
+          ...(backgroundSrc ? { backgroundImage: `url(${backgroundSrc})` } : {}),
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          
         }}
+        suppressHydrationWarning
       >
         {/* City & Time */}
         <div className="absolute top-4 left-4 right-4 flex justify-between text-sm sm:text-base" style={{ color: COLORS.textPrimary }}>
@@ -253,14 +280,20 @@ export default function LeftPanel({
         </div>
 
         {/* Weather Icon */}
-        <Image
-          src={getWeatherIcon(weather)}
-          alt="Weather"
-          width={148}
-          height={148}
-          className="absolute right-1 sm:right-1 bottom-6 sm:bottom-1 w-[148px] h-[148px] sm:w-[248px] sm:h-[248px] drop-shadow-2xl"
-          priority
-        />
+        {mounted && weatherIconSrc ? (
+          // Render image only after mount to avoid SSR mismatch
+          // Next/Image can accept a string src
+          <Image
+            src={weatherIconSrc}
+            alt="Weather"
+            width={148}
+            height={148}
+            className="absolute right-1 sm:right-1 bottom-6 sm:bottom-1 w-[148px] h-[148px] sm:w-[248px] sm:h-[248px] drop-shadow-2xl"
+            priority
+          />
+        ) : (
+          <div style={{ width: 148, height: 148 }} />
+        )}
       </div>
     </div>
   );

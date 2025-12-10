@@ -13,20 +13,16 @@ export default function DetailPage({
   const [location, setLocation] = useState<{ city?: string; lat?: number; lon?: number }>({
     city: 'Karachi'
   });
-
-  // Handle searchParams in client component
   useEffect(() => {
     searchParams.then((params) => {
       const { city, lat, lon } = params;
       if (lat && lon) {
-        // Use coordinates if available (more accurate)
         setLocation({
           lat: parseFloat(lat),
           lon: parseFloat(lon),
-          city: city // Keep city name for display
+          city: city
         });
       } else if (city?.trim()) {
-        // Fallback to city name only
         setLocation({ city: city.trim() });
       }
     });
@@ -38,8 +34,7 @@ export default function DetailPage({
     location.lon
   );
 
-  // You can implement Prismic slices fetching in a separate hook or slice
-  const slices: any[] = [];
+  const slices: unknown[] = [];
 
   if (loading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;

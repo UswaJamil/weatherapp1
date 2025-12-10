@@ -5,7 +5,16 @@ import Image from 'next/image';
 import SearchInput from '@/Components/SearchInput';
 import { COLORS } from '@/constants/colors';
 
-const Hero = ({ page }: any) => {
+type HeroPage = {
+  data: {
+    logo: { url?: string; alt?: string };
+    heading: string;
+    subtitle: string;
+    search_placeholder?: string;
+  };
+};
+
+const Hero = ({ page }: { page: HeroPage }) => {
   return (
     <div
       className={`w-full bg-cover bg-top bg-no-repeat`}

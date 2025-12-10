@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { WeatherData, MainWeatherInfo, WeatherState } from '@/constants/types';
+import { WeatherState } from '@/constants/types';
 
 const API_KEY = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
 
@@ -38,7 +38,7 @@ export const fetchWeather = createAsyncThunk(
 );
 
 export const fetchWeatherByCoords = createAsyncThunk<
-  any,
+  unknown,
   { lat: number; lon: number }
 >(
   'weather/fetchByCoords',
