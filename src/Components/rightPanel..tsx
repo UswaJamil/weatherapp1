@@ -6,6 +6,7 @@ import { SliceZone } from '@prismicio/react';
 import { components as Slices } from '@/slices';
 import type { ForecastState, WeatherState, ForecastListItem } from '@/constants/types';
 import type { StaticImageData } from 'next/image';
+import type { SliceZone as PrismicSliceZone } from '@prismicio/client';
 import { useUnitToggle } from '../hooks/useUnit';
 
 import { DETAIL_ICONS, FORECAST_ICONS } from '@/constants/images';
@@ -36,12 +37,18 @@ export default function RightPanel({
 }: {
   weather: WeatherState['current'] | null;
   forecast: ForecastState['data'] | null;
-  slices: unknown[];
+  slices: PrismicSliceZone;
 }) {
   const [fiveDayData, setFiveDayData] = useState<DayForecast[]>([]);
 
   // Use hook for unit handling
   const { convertTemperature: convert, getSymbol: tempSymbol } = useUnitToggle();
+
+  // Derived safe values to satisfy TypeScript narrowings
+  const cloudsAll = weather?.clouds?.all ?? 0;
+  const windSpeed = weather?.wind?.speed;
+  const humidity = weather?.main?.humidity;
+  const feelsLike = weather?.main?.feels_like;
 
   useEffect(() => {
     if (forecast?.list) {
@@ -138,33 +145,26 @@ export default function RightPanel({
             {
               icon: thermometerIcon,
               label: 'Feels Like',
-              value: weather?.main?.feels_like
-                ? `${convert(weather.main.feels_like)}${tempSymbol()}`
+              value: typeof feelsLike === 'number'
+                ? `${convert(feelsLike)}${tempSymbol()}`
                 : '—',
             },
             {
               icon: rainIcon,
               label: 'Probability of Rain',
-              value:
-                weather?.clouds?.all > 70
-                  ? 'High'
-                  : weather?.clouds?.all > 40
-                    ? 'Medium'
-                    : 'Low',
+              value: cloudsAll > 70 ? 'High' : cloudsAll > 40 ? 'Medium' : 'Low',
             },
             {
               icon: windLight,
               label: 'Wind Speed',
-              value: weather?.wind?.speed
-                ? `${Math.round(weather.wind.speed * 3.6)} km/h`
+              value: typeof windSpeed === 'number'
+                ? `${Math.round(windSpeed * 3.6)} km/h`
                 : '—',
             },
             {
               icon: humidityIcon,
               label: 'Air Humidity',
-              value: weather?.main?.humidity
-                ? `${weather.main.humidity}%`
-                : '—',
+              value: typeof humidity === 'number' ? `${humidity}%` : '—',
             },
             {
               icon: uvIcon,

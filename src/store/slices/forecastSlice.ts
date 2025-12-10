@@ -9,7 +9,10 @@ const initialState: ForecastState = {
   error: null,
 };
 
-export const fetchForecast = createAsyncThunk(
+export const fetchForecast = createAsyncThunk<
+  ForecastState['data'],
+  string
+>(
   'forecast/fetch5Day',
   async (
     city: string,
@@ -37,7 +40,7 @@ export const fetchForecast = createAsyncThunk(
 );
 
 export const fetchForecastByCoords = createAsyncThunk<
-  unknown,
+  ForecastState['data'],
   { lat: number; lon: number }
 >(
   'forecast/fetchByCoords',

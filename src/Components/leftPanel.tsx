@@ -8,6 +8,7 @@ import { components as Slices } from '@/slices';
 import { WEATHER_ICONS, BACKGROUND_IMAGES } from '@/constants/images';
 import type { WeatherState, ForecastState } from '@/constants/types';
 import type { StaticImageData } from 'next/image';
+import type { SliceZone as PrismicSliceZone } from '@prismicio/client';
 import UnitToggle from '@/Components/UnitToggle';
 import { useUnitToggle } from '../hooks/useUnit';
 import { useLocationSearch, useLocationSelect } from '../hooks/useSearch';
@@ -75,7 +76,7 @@ export default function LeftPanel({
 }: {
   weather: WeatherState['current'] | null;
   forecast: ForecastState['data'] | null;
-  slices: unknown[];
+  slices: PrismicSliceZone;
 }) {
   const router = useRouter();
   const [currentTime, setCurrentTime] = useState('--:--');
@@ -128,14 +129,23 @@ export default function LeftPanel({
     const isNight = new Date().getHours() >= 18 || new Date().getHours() < 6;
     try {
       const bg = getBackgroundImage(weather, isNight);
-      setBackgroundSrc(bg?.default?.src || bg?.src || null);
+      // bg can be a string URL, StaticImageData with `src`, or an object with `.default.src` (legacy require)
+      const resolved =
+        (bg && typeof (bg as any)?.default?.src === 'string' && (bg as any).default.src) ||
+        (bg && typeof (bg as any)?.src === 'string' && (bg as any).src) ||
+        (typeof bg === 'string' ? bg : null);
+      setBackgroundSrc(resolved);
     } catch (e) {
       setBackgroundSrc(null);
     }
 
     try {
       const icon = getWeatherIcon(weather, isNight);
-      setWeatherIconSrc(icon?.default?.src || icon?.src || icon);
+      const resolvedIcon =
+        (icon && typeof (icon as any)?.default?.src === 'string' && (icon as any).default.src) ||
+        (icon && typeof (icon as any)?.src === 'string' && (icon as any).src) ||
+        (typeof icon === 'string' ? icon : null);
+      setWeatherIconSrc(resolvedIcon);
     } catch (e) {
       setWeatherIconSrc(null);
     }

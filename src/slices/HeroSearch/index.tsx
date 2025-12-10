@@ -1,18 +1,15 @@
 import { FC } from 'react';
-import { SliceComponentProps } from '@prismicio/react';
-import { HeroSearchProps } from '@/constants/types';
 
 /**
  * Component for "HeroSearch" Slices.
  */
-const HeroSearch: FC<HeroSearchProps> = ({ slice }) => {
+const HeroSearch: FC<{ slice: Record<string, unknown> }> = ({ slice }) => {
+  const sliceType = String((slice as any).slice_type || 'unknown');
+  const variation = String((slice as any).variation || 'default');
+
   return (
-    <section
-      data-slice-type={slice.slice_type}
-      data-slice-variation={slice.variation}
-    >
-      Placeholder component for hero_search (variation: {slice.variation})
-      slices.
+    <section data-slice-type={sliceType} data-slice-variation={variation}>
+      Placeholder component for hero_search (variation: {variation}) slices.
       <br />
       <strong>You can edit this slice directly in your code editor.</strong>
       {/**

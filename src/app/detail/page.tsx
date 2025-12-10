@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import LeftPanel from '@/Components/leftPanel';
 import RightPanel from '@/Components/rightPanel.';
+import type { SliceZone as PrismicSliceZone } from '@prismicio/client';
 import { useWeatherAndForecast } from '@/hooks/useWeather';
 
 export default function DetailPage({
@@ -34,7 +35,7 @@ export default function DetailPage({
     location.lon
   );
 
-  const slices: unknown[] = [];
+  const slices: PrismicSliceZone = [];
 
   if (loading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;

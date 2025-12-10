@@ -4,17 +4,9 @@ import React from 'react';
 import Image from 'next/image';
 import SearchInput from '@/Components/SearchInput';
 import { COLORS } from '@/constants/colors';
+import type { Content } from '@prismicio/client';
 
-type HeroPage = {
-  data: {
-    logo: { url?: string; alt?: string };
-    heading: string;
-    subtitle: string;
-    search_placeholder?: string;
-  };
-};
-
-const Hero = ({ page }: { page: HeroPage }) => {
+const Hero = ({ page }: { page: Content.HomeDocument }) => {
   return (
     <div
       className={`w-full bg-cover bg-top bg-no-repeat`}
@@ -71,7 +63,13 @@ const Hero = ({ page }: { page: HeroPage }) => {
 
             {/* Search Input */}
             <div className="w-full max-w-sm md:max-w-2xl mx-auto">
-              <SearchInput placeholder={page.data.search_placeholder} />
+              <SearchInput
+                placeholder={
+                  typeof page.data.search_placeholder === 'string'
+                    ? page.data.search_placeholder
+                    : undefined
+                }
+              />
             </div>
           </div>
         </div>

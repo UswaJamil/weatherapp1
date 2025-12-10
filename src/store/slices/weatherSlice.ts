@@ -10,7 +10,10 @@ const initialState: WeatherState = {
   lastCity: null,
 };
 
-export const fetchWeather = createAsyncThunk(
+export const fetchWeather = createAsyncThunk<
+  WeatherState['current'],
+  string
+>(
   'weather/fetchCurrent',
   async (
     city: string,
@@ -38,7 +41,7 @@ export const fetchWeather = createAsyncThunk(
 );
 
 export const fetchWeatherByCoords = createAsyncThunk<
-  unknown,
+  WeatherState['current'],
   { lat: number; lon: number }
 >(
   'weather/fetchByCoords',
@@ -85,7 +88,7 @@ const weatherSlice = createSlice({
       .addCase(fetchWeather.fulfilled, (state, action) => {
         state.loading = false;
         state.current = action.payload;
-        state.lastCity = action.payload.name;
+        state.lastCity = action.payload?.name ?? state.lastCity;
       })
       .addCase(fetchWeather.rejected, (state, action) => {
         state.loading = false;
@@ -99,7 +102,7 @@ const weatherSlice = createSlice({
       .addCase(fetchWeatherByCoords.fulfilled, (state, action) => {
         state.loading = false;
         state.current = action.payload;
-        state.lastCity = action.payload.name;
+        state.lastCity = action.payload?.name ?? state.lastCity;
       })
       .addCase(fetchWeatherByCoords.rejected, (state, action) => {
         state.loading = false;

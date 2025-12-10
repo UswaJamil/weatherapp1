@@ -9,6 +9,9 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
+  // `metadataBase` is used to resolve absolute URLs for Open Graph/Twitter images.
+  // Use the `NEXT_PUBLIC_METADATA_BASE` env var in production and fall back to localhost.
+  metadataBase: new URL(process.env.NEXT_PUBLIC_METADATA_BASE || 'http://localhost:3000'),
   title: {
     default: 'Weather App',
     template: '%s | Weather App',

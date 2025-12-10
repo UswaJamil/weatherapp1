@@ -57,6 +57,7 @@ export interface WeatherState {
     weather: WeatherData[];
     wind: { speed: number };
     clouds: { all: number };
+    logo?: { url?: string | null };
   } | null;
   loading: boolean;
   error: string | null;
@@ -98,10 +99,13 @@ export interface UnitToggleProps {
 // Slice Component Prop Types
 // ============================================================================
 
-export type WeatherOverviewProps = unknown; // use specific Prismic types if available
-export type WeatherForecastProps = unknown;
-export type WeatherFactsProps = unknown;
-export type HeroSearchProps = unknown;
+import type { Content } from '@prismicio/client';
+import type { SliceComponentProps } from '@prismicio/react';
+
+export type WeatherOverviewProps = SliceComponentProps<Content.WeatherOverviewSlice>;
+export type WeatherForecastProps = SliceComponentProps<Content.WeatherForecastSlice>;
+export type WeatherFactsProps = SliceComponentProps<Content.WeatherFactsSlice>;
+export type HeroSearchProps = { slice: Record<string, unknown> };
 
 // ============================================================================
 // Utility Types
